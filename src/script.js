@@ -26,19 +26,37 @@ let mixer = null
 
 gltfLoader.load(
     // '/models/FlightHelmet/glTF/FlightHelmet.gltf',
-    // 'models/Duck/glTF-Draco/Duck.gltf',
-    'models/Fox/glTF/Fox.gltf',
+    'models/Duck/glTF-Draco/Duck.gltf',
+    // 'models/Fox/glTF/Fox.gltf',
     (gltf) => {
         console.log('success')
-        console.log(gltf.animations)
+        console.log(gltf)
 
         mixer = new THREE.AnimationMixer(gltf.scene)
-        const action = mixer.clipAction(gltf.animations[2])
+        // const action = mixer.clipAction(gltf.animations[2])
 
-        console.log('action ', action)
-        action.play()
+        // console.log('action ', action)
+        // action.play()
 
-        console.log(gltf.scenes[0].scale.set(0.025, 0.025, 0.025)) 
+    //    gltf.scenes[0].scale.set(0.025, 0.025, 0.025)
+
+       gltf.scene.traverse((node) => {
+        if(node.isMesh) {
+            const geometry = node.geometry
+
+            if(geometry) {
+                if(geometry.isBufferGeometry) {
+                    const vertices = geometry.attributes.position.count
+                    const edges = vertices/3
+                    console.log(`Vertices: ${vertices}, Edges: ${edges}`);
+                } else {
+                    console.warn("Geometry is not a BufferGeometry. Counts might not be accurate.");
+                }
+            } else {
+                console.warn("Node has no geometry.");
+            }
+        }
+       })
 
         // In Three.js, when you add an object to a scene, it automatically gets removed from its current parent.
         // so the below for loop wont work as intended..!
